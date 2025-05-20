@@ -1,0 +1,632 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Classroom | Reading Exercises Started</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#1a1a1a">
+
+  <!-- Basit CSS -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+
+body {
+  font-family: 'Comic Neue', cursive;
+  margin: 0;
+  padding: 1rem;
+  background: linear-gradient(to right, #fdfbfb, #ebedee);
+  color: #333;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Animated bubbles background */
+body::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle, rgba(255,192,203,0.2) 20%, transparent 20%),
+                    radial-gradient(circle, rgba(135,206,250,0.2) 20%, transparent 20%);
+  background-size: 100px 100px;
+  animation: floatBubbles 10s linear infinite;
+  z-index: 0;
+}
+
+@keyframes floatBubbles {
+  0% { background-position: 0 0, 100px 100px; }
+  100% { background-position: 0 1000px, 100px 1100px; }
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 2.8rem;
+  color: #ff6f61;
+  text-shadow: 2px 2px 0 #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+input[type="text"] {
+  padding: 0.6rem;
+  width: 280px;
+  border-radius: 12px;
+  border: 2px solid #ffa07a;
+  outline: none;
+  font-size: 1rem;
+}
+
+.filters {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.filters button {
+  background: #ffdab9;
+  color: #333;
+  border: 2px solid #ffa07a;
+  margin: 0 6px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+}
+
+.filters button:hover {
+  background: #ffa07a;
+  color: #fff;
+}
+
+.filters button.active {
+  background-color: #ffa07a;
+  color: #fff;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.card {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #fff;
+  border: 3px solid #ffb6c1;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.card:hover {
+  animation: wiggle 0.3s ease-in-out;
+  transform: scale(1.1) rotate(-2deg);
+  box-shadow: 0 0 12px #ff69b4;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+nav a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+  </style>
+<script>
+	window.aiptag = window.aiptag || {cmd: []};
+	aiptag.cmd.display = aiptag.cmd.display || [];
+	aiptag.cmd.player = aiptag.cmd.player || [];
+	//CMP tool settings
+	aiptag.cmp = {
+		show: true,
+		position: "centered",  //centered, bottom
+		button: true,
+		buttonText: "Privacy settings",
+		buttonPosition: "bottom-left" //bottom-left, bottom-right, bottom-center, top-left, top-right
+	}
+	aiptag.cmd.player.push(function() {
+		aiptag.adplayer = new aipPlayer({
+			AD_WIDTH: 960,
+			AD_HEIGHT: 540,
+			AD_DISPLAY: 'default', //default, fullscreen, fill, center, modal-center
+			LOADING_TEXT: 'loading advertisement',
+			PREROLL_ELEM: function(){return document.getElementById('videoad')},
+			AIP_COMPLETE: function (state)  {
+				/*******************
+				 ***** WARNING *****
+				 *******************
+				 Please do not remove the PREROLL_ELEM
+				 from the page, it will be hidden automaticly.
+				*/
+				
+			//	alert("Video Ad Completed: " + state);
+			}
+		});
+
+			});
+
+		function show_videoad() {
+		//check if the adslib is loaded correctly or blocked by adblockers etc.
+		if (typeof aiptag.adplayer !== 'undefined') {
+			aiptag.cmd.player.push(function() { aiptag.adplayer.startVideoAd(); });
+		} else {
+			//Adlib didnt load this could be due to an adblocker, timeout etc.
+			//Please add your script here that starts the content, this usually is the same script as added in AIP_COMPLETE.
+			alert("Ad Could not be loaded, load your content here");
+			aiptag.adplayer.aipConfig.AIP_COMPLETE();
+		}
+	}
+		</script>
+	<script async src="//api.adinplay.com/libs/aiptag/pub/AGV/mathtest-99.space/tag.min.js"></script>
+</head>
+<body>
+<script>
+document.getElementById('searchBox').addEventListener('input', function () {
+  const val = this.value;
+  fetch('search.php?q=' + encodeURIComponent(val))
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('gmResults').innerHTML = html;
+    });
+});
+</script>
+  <header style="text-align:center; margin-bottom: 2rem; position:relative; z-index:2;">
+  <a href="/">  <img src="logo.svg?22" alt="Logo" style="height:80px; margin-bottom:10px;"></a>
+   
+  </header>
+
+
+<div class="banner-top" style="position: relative;width: 970px;height: 250px;margin: 0 auto;background-color: #f1f1f1;z-index: 9999;">
+ <center><div id='mathtest-99-space_970x250'>
+		<script type='text/javascript'>
+			aiptag.cmd.display.push(function() { aipDisplayTag.display('mathtest-99-space_970x250'); });
+		</script>
+	</div></center>
+</div>
+
+</br>
+ 
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search by visual...">
+  </div>
+
+ 
+ 
+  <div class="grid" id="gmGrid">
+          <div class="card" data-title="retro bowl" onclick="location.href='classroom-1.html'">
+        <img src="../uploads/67f7bef88d465-retro-bowl.png" alt="">
+      </div>
+    
+      <div class="card" data-title="yohoho" onclick="location.href='classroom-2.html'">
+        <img src="../uploads/67f7c31617f88-Yohoho-2.png" alt="">
+      </div>
+    
+      <div class="card" data-title="time shooter swat" onclick="location.href='classroom-3.html'">
+        <img src="../uploads/67f81ab20bb67-timeshoter.png" alt="">
+      </div>
+    
+      <div class="card" data-title="soccer random" onclick="location.href='classroom-4.html'">
+        <img src="../uploads/67f81b10332a5-soccersandom.png" alt="">
+      </div>
+    
+      <div class="card" data-title="flappy bird" onclick="location.href='classroom-5.html'">
+        <img src="../uploads/67f81b376a7ee-flasppybird.png" alt="">
+      </div>
+    
+      <div class="card" data-title="car rush" onclick="location.href='classroom-6.html'">
+        <img src="../uploads/67f81b62648f3-carrush.png" alt="">
+      </div>
+    
+      <div class="card" data-title="mr. bullet 3d" onclick="location.href='classroom-7.html'">
+        <img src="../uploads/67f81b8ba76ee-mrbullet.png" alt="">
+      </div>
+    
+      <div class="card" data-title="fireboy and watergirl" onclick="location.href='classroom-8.html'">
+        <img src="../uploads/67f81bbf309a4-fireboy.png" alt="">
+      </div>
+    
+      <div class="card" data-title="fruit ninja" onclick="location.href='classroom-9.html'">
+        <img src="../uploads/67f81bdb81dcc-fruitninja.png" alt="">
+      </div>
+    
+      <div class="card" data-title="basketball legends" onclick="location.href='classroom-10.html'">
+        <img src="../uploads/67f81bffdbb1f-basketballegends.png" alt="">
+      </div>
+    
+      <div class="card" data-title="madalin stunt cars 2" onclick="location.href='classroom-11.html'">
+        <img src="../uploads/67f81c283433e-mandalinstunt.png" alt="">
+      </div>
+    
+      <div class="card" data-title="monkey mart" onclick="location.href='classroom-12.html'">
+        <img src="../uploads/67f81c4a7ac17-monkey mart.png" alt="">
+      </div>
+    
+      <div class="card" data-title="real football challenge" onclick="location.href='classroom-13.html'">
+        <img src="../uploads/67f81c6c5209c-realfootballchallenge.png" alt="">
+      </div>
+    
+      <div class="card" data-title="stick duel battle" onclick="location.href='classroom-14.html'">
+        <img src="../uploads/67f81c953c88d-stickduelbattle.png" alt="">
+      </div>
+    
+      <div class="card" data-title="tunnel rush" onclick="location.href='classroom-15.html'">
+        <img src="../uploads/67f81cad72af6-tunnelrush.png" alt="">
+      </div>
+    
+      <div class="card" data-title="duck life" onclick="location.href='classroom-16.html'">
+        <img src="../uploads/67f81ccd45e7e-ducklife.png" alt="">
+      </div>
+    
+      <div class="card" data-title="moto x3m winter" onclick="location.href='classroom-17.html'">
+        <img src="../uploads/67f81ce8010ba-motox3m.png" alt="">
+      </div>
+    
+      <div class="card" data-title="drift hunters" onclick="location.href='classroom-18.html'">
+        <img src="../uploads/67f81cff8ed92-drifthunters.png" alt="">
+      </div>
+    
+      <div class="card" data-title="snow rider 3d" onclick="location.href='classroom-19.html'">
+        <img src="../uploads/67f81d26242df-snowrider.png" alt="">
+      </div>
+    
+      <div class="card" data-title="drive mad" onclick="location.href='classroom-20.html'">
+        <img src="../uploads/67f81d603b75d-drivemad.png" alt="">
+      </div>
+    
+      <div class="card" data-title="tiny fishing" onclick="location.href='classroom-21.html'">
+        <img src="../uploads/67f81d7d00b72-tinyfishing.png" alt="">
+      </div>
+    
+      <div class="card" data-title="among us" onclick="location.href='classroom-22.html'">
+        <img src="../uploads/67f81d9887aed-amongus.png" alt="">
+      </div>
+    
+      <div class="card" data-title="slither.io" onclick="location.href='classroom-23.html'">
+        <img src="../uploads/67f81db81a253-slither.png" alt="">
+      </div>
+    
+      <div class="card" data-title="ovo" onclick="location.href='classroom-24.html'">
+        <img src="../uploads/67f81dd905732-ovo.png" alt="">
+      </div>
+    
+      <div class="card" data-title="eggy car" onclick="location.href='classroom-25.html'">
+        <img src="../uploads/67f81dfc5b040-eggycar.png" alt="">
+      </div>
+    
+      <div class="card" data-title="geometry dash" onclick="location.href='classroom-26.html'">
+        <img src="../uploads/67f820082a3f4-geometrydush.png" alt="">
+      </div>
+    
+      <div class="card" data-title="fnaf" onclick="location.href='classroom-27.html'">
+        <img src="../uploads/67f82021db2c4-fivenightsfreddt.png" alt="">
+      </div>
+    
+      <div class="card" data-title="temple run 2" onclick="location.href='classroom-28.html'">
+        <img src="../uploads/67f8204bbf624-templerun.png" alt="">
+      </div>
+    
+      <div class="card" data-title="basketball stars" onclick="location.href='classroom-29.html'">
+        <img src="../uploads/67f82068c2310-basketballstarts.png" alt="">
+      </div>
+    
+      <div class="card" data-title="happy wheels" onclick="location.href='classroom-30.html'">
+        <img src="../uploads/67f820810ef31-happywheels.png" alt="">
+      </div>
+    
+      <div class="card" data-title="run 3" onclick="location.href='classroom-31.html'">
+        <img src="../uploads/67f82096b2b7b-run3.png" alt="">
+      </div>
+    
+      <div class="card" data-title="slope" onclick="location.href='classroom-32.html'">
+        <img src="../uploads/67f820c1785cb-slope.png" alt="">
+      </div>
+    
+      <div class="card" data-title="paper.io" onclick="location.href='classroom-33.html'">
+        <img src="../uploads/67f820e4da294-paper.png" alt="">
+      </div>
+    
+      <div class="card" data-title="bitlife" onclick="location.href='classroom-34.html'">
+        <img src="../uploads/67f8210209685-bitlife.png" alt="">
+      </div>
+    
+      <div class="card" data-title="drift boss" onclick="location.href='classroom-35.html'">
+        <img src="../uploads/67f8212e95f23-driftboss.png" alt="">
+      </div>
+    
+      <div class="card" data-title="cookie clicker" onclick="location.href='classroom-36.html'">
+        <img src="../uploads/67f8214849fea-cookieclicker.png" alt="">
+      </div>
+    
+      <div class="card" data-title="papa's bakeria" onclick="location.href='classroom-37.html'">
+        <img src="../uploads/67f8217d5157a-papasbaker.png" alt="">
+      </div>
+    
+      <div class="card" data-title="8 ball pool" onclick="location.href='classroom-38.html'">
+        <img src="../uploads/67f82197cdba0-8ball.png" alt="">
+      </div>
+    
+      <div class="card" data-title="2048" onclick="location.href='classroom-39.html'">
+        <img src="../uploads/67f821ac37ca7-2048.png" alt="">
+      </div>
+    
+      <div class="card" data-title="1v1 lol" onclick="location.href='classroom-40.html'">
+        <img src="../uploads/67f821c182f52-1v1lol.png" alt="">
+      </div>
+    
+      <div class="card" data-title="wordle unlimited" onclick="location.href='classroom-41.html'">
+        <img src="uploads/1200x1200ECA.PESS01-60.jpg" alt="">
+      </div>
+    
+      <div class="card" data-title="woodventure" onclick="location.href='classroom-42.html'">
+        <img src="../uploads/67f828adc2ffd-67eafde7da778.png" alt="">
+      </div>
+    
+      <div class="card" data-title="wheely 8" onclick="location.href='classroom-43.html'">
+        <img src="uploads/10784_5eb3f1b7c26a8.jpg" alt="">
+      </div>
+    
+      <div class="card" data-title="wheely 7" onclick="location.href='classroom-44.html'">
+        <img src="../uploads/67f82a86b774d-67eafe88e30d6.png" alt="">
+      </div>
+    
+      <div class="card" data-title="wheely 6 " onclick="location.href='classroom-45.html'">
+        <img src="../uploads/67f82ae9a92b9-67eafebed6854.png" alt="">
+      </div>
+    
+      <div class="card" data-title="wheely 5 " onclick="location.href='classroom-46.html'">
+        <img src="../uploads/67f82b212e23f-67eafee0628a9.png" alt="">
+      </div>
+    
+      <div class="card" data-title="wheely 4 " onclick="location.href='classroom-47.html'">
+        <img src="../uploads/67f82b769912a-67eaff12eec2c.png" alt="">
+      </div>
+    
+      <div class="card" data-title="wheely 3 " onclick="location.href='classroom-48.html'">
+        <img src="../uploads/67f82ba3da38a-67eaffa352bb6.png" alt="">
+      </div>
+    
+      <div class="card" data-title="wheely 2" onclick="location.href='classroom-49.html'">
+        <img src="../uploads/67f82be75f75b-67eaffd6a2ca0.png" alt="">
+      </div>
+    
+      <div class="card" data-title="wheelie bike 2" onclick="location.href='classroom-50.html'">
+        <img src="../uploads/67f82c57028db-67eb001325ba3.png" alt="">
+      </div>
+    
+      <div class="card" data-title="wheelie bike" onclick="location.href='classroom-51.html'">
+        <img src="../uploads/67f82ca723414-67eb0057dce1d.png" alt="">
+      </div>
+    
+      <div class="card" data-title="whack your boss" onclick="location.href='classroom-52.html'">
+        <img src="../uploads/67f82cf900e40-67eb0097355d1.png" alt="">
+      </div>
+    
+      <div class="card" data-title="volley random" onclick="location.href='classroom-53.html'">
+        <img src="../uploads/67f82d401cde2-67eb00f515bde.png" alt="">
+      </div>
+    
+      <div class="card" data-title="squid challenge 2" onclick="location.href='classroom-54.html'">
+        <img src="../uploads/67f82dc16d8f3-67eb0a4ec9f0f.png" alt="">
+      </div>
+    
+      <div class="card" data-title="traffic control" onclick="location.href='classroom-55.html'">
+        <img src="../uploads/67f82df90f7bf-67eb0337f2ba5.png" alt="">
+      </div>
+    
+      <div class="card" data-title="tank trouble" onclick="location.href='classroom-56.html'">
+        <img src="../uploads/67f82e72974ac-67eb074dedcb4.png" alt="">
+      </div>
+    
+      <div class="card" data-title="tank wars 2" onclick="location.href='classroom-57.html'">
+        <img src="../uploads/67f82eb339fa4-67eb076cde112.png" alt="">
+      </div>
+    
+      <div class="card" data-title="parking fury 2" onclick="location.href='classroom-58.html'">
+        <img src="uploads/67ebe447a0042.png" alt="">
+      </div>
+    
+      <div class="card" data-title="subway surfers" onclick="location.href='classroom-59.html'">
+        <img src="../uploads/67f82f25209d6-67eb08b41aed0.png" alt="">
+      </div>
+    
+      <div class="card" data-title="subway surfers tokyo" onclick="location.href='classroom-60.html'">
+        <img src="../uploads/67f82f4adc712-67eb08e7a7335.png" alt="">
+      </div>
+    
+      <div class="card" data-title="subway surfers sanfancisco" onclick="location.href='classroom-61.html'">
+        <img src="../uploads/67f82f7d56dae-67eb08fdb6158.png" alt="">
+      </div>
+    
+      <div class="card" data-title="subway surfers nyc" onclick="location.href='classroom-62.html'">
+        <img src="../uploads/67f82fac8977a-67eb09189fd2f.png" alt="">
+      </div>
+    
+      <div class="card" data-title="subway surfers bali" onclick="location.href='classroom-63.html'">
+        <img src="../uploads/67f82fd4bedd2-67eb093631512.png" alt="">
+      </div>
+    
+      <div class="card" data-title="stick merge 2" onclick="location.href='classroom-64.html'">
+        <img src="../uploads/67f830267985b-67eb094c8ffc4.png" alt="">
+      </div>
+    
+      <div class="card" data-title="spider solitaire" onclick="location.href='classroom-65.html'">
+        <img src="../uploads/67f83070962c9-67eb0a63e3747.png" alt="">
+      </div>
+    
+      <div class="card" data-title="space bar clicker" onclick="location.href='classroom-66.html'">
+        <img src="../uploads/67f830acc3965-67eb0a7931071.png" alt="">
+      </div>
+    
+      <div class="card" data-title="solitaire classic 2" onclick="location.href='classroom-67.html'">
+        <img src="../uploads/67f830ea60f69-67eb0ac49849e.png" alt="">
+      </div>
+    
+      <div class="card" data-title="soccer heads" onclick="location.href='classroom-68.html'">
+        <img src="../uploads/67f8311ebc956-67eb0afb03242.png" alt="">
+      </div>
+    
+      <div class="card" data-title="soccer skills" onclick="location.href='classroom-69.html'">
+        <img src="../uploads/67f8316003740-67eb0b2af2383.png" alt="">
+      </div>
+    
+      <div class="card" data-title="snow battle" onclick="location.href='classroom-70.html'">
+        <img src="../uploads/67f831878df84-67eb0bdc1d217.png" alt="">
+      </div>
+    
+      <div class="card" data-title="snail bob 8" onclick="location.href='classroom-71.html'">
+        <img src="../uploads/67f831ae713e2-67eb0c0009a39.png" alt="">
+      </div>
+    
+      <div class="card" data-title="snail bob 7" onclick="location.href='classroom-72.html'">
+        <img src="../uploads/67f831d362c7b-67eb1e3f672d3.png" alt="">
+      </div>
+    
+      <div class="card" data-title="small worldcup" onclick="location.href='classroom-73.html'">
+        <img src="../uploads/67f831fc75c04-67eb1f936f3eb.png" alt="">
+      </div>
+    
+      <div class="card" data-title="sling tomb " onclick="location.href='classroom-74.html'">
+        <img src="../uploads/67f8322f5bccc-67ebd79550c2e.png" alt="">
+      </div>
+    
+      <div class="card" data-title="sky bridge" onclick="location.href='classroom-75.html'">
+        <img src="../uploads/67f8326fc00e5-67ebd863b5cbe.png" alt="">
+      </div>
+    
+      <div class="card" data-title="raft wars 2" onclick="location.href='classroom-76.html'">
+        <img src="../uploads/67f832d051ea2-67ebdc1d98a2b.png" alt="">
+      </div>
+    
+      <div class="card" data-title="pokemon emerald" onclick="location.href='classroom-77.html'">
+        <img src="uploads/pokemon.png" alt="">
+      </div>
+    
+  </div>
+
+ 
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const cards = document.querySelectorAll('.card');
+    const filterButtons = document.querySelectorAll('.filters button');
+
+    function filterCategory(category) {
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-category');
+        const match = (category === 'all' || cat === category);
+        card.style.display = match ? 'block' : 'none';
+      });
+
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    searchInput.addEventListener('input', function() {
+      const val = this.value.toLowerCase();
+      cards.forEach(card => {
+        const title = card.getAttribute('data-title');
+        card.style.display = title.includes(val) ? 'block' : 'none';
+      });
+    });
+  </script>
+
+
+  <footer style="text-align:center; margin-top:40px; padding: 1rem 0; font-size: 0.9rem; color: #666;">
+    | Stay stealthy 😎 | <a href="/sitemap.xml">map</a>
+  </footer>
+
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KPR7VFVG5P"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KPR7VFVG5P');
+</script>
+
+
+</body>
+</html>
+
+
+  <style>
+    @keyframes wiggle {
+      0% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.05) rotate(2deg); }
+      50% { transform: scale(1.08) rotate(-2deg); }
+      100% { transform: scale(1.05) rotate(0deg); }
+    }
+  </style>
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const cards = document.querySelectorAll('.card');
+  const filterButtons = document.querySelectorAll('.filters button');
+
+  // Load played games from localStorage
+  let playedGames = JSON.parse(localStorage.getItem('playedGames')) || [];
+
+  // Highlight previously played games
+  cards.forEach(card => {
+    const title = card.getAttribute('data-title');
+
+    if (playedGames.includes(title)) {
+      card.style.opacity = '0.5'; // visually indicate played game
+    }
+
+    card.addEventListener('click', () => {
+      if (!playedGames.includes(title)) {
+        playedGames.push(title);
+        localStorage.setItem('playedGames', JSON.stringify(playedGames));
+      }
+    });
+  });
+
+  function filterCategory(category) {
+    cards.forEach(card => {
+      const cat = card.getAttribute('data-category');
+      const match = (category === 'all' || cat === category);
+      card.style.display = match ? 'block' : 'none';
+    });
+
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  searchInput.addEventListener('input', function() {
+    const val = this.value.toLowerCase();
+    cards.forEach(card => {
+      const title = card.getAttribute('data-title');
+      card.style.display = title.includes(val) ? 'block' : 'none';
+    });
+  });
+</script>
